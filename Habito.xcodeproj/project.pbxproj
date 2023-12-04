@@ -7,6 +7,9 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		E979DA402B1E171600E6A70C /* HabitDetailView.swift in Sources */ = {isa = PBXBuildFile; fileRef = E979DA3F2B1E171600E6A70C /* HabitDetailView.swift */; };
+		E979DA422B1E18EA00E6A70C /* ProgressBarView.swift in Sources */ = {isa = PBXBuildFile; fileRef = E979DA412B1E18EA00E6A70C /* ProgressBarView.swift */; };
+		E979DA442B1E2C2E00E6A70C /* CustomDividerView.swift in Sources */ = {isa = PBXBuildFile; fileRef = E979DA432B1E2C2E00E6A70C /* CustomDividerView.swift */; };
 		E993EA042B1B96D2002977DF /* HabitoApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = E993EA032B1B96D2002977DF /* HabitoApp.swift */; };
 		E993EA062B1B96D2002977DF /* ContentView.swift in Sources */ = {isa = PBXBuildFile; fileRef = E993EA052B1B96D2002977DF /* ContentView.swift */; };
 		E993EA082B1B96D2002977DF /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = E993EA072B1B96D2002977DF /* Assets.xcassets */; };
@@ -15,6 +18,9 @@
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
+		E979DA3F2B1E171600E6A70C /* HabitDetailView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HabitDetailView.swift; sourceTree = "<group>"; };
+		E979DA412B1E18EA00E6A70C /* ProgressBarView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ProgressBarView.swift; sourceTree = "<group>"; };
+		E979DA432B1E2C2E00E6A70C /* CustomDividerView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CustomDividerView.swift; sourceTree = "<group>"; };
 		E993EA002B1B96D2002977DF /* Habito.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Habito.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		E993EA032B1B96D2002977DF /* HabitoApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HabitoApp.swift; sourceTree = "<group>"; };
 		E993EA052B1B96D2002977DF /* ContentView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ContentView.swift; sourceTree = "<group>"; };
@@ -56,6 +62,9 @@
 				E993EA032B1B96D2002977DF /* HabitoApp.swift */,
 				E993EA052B1B96D2002977DF /* ContentView.swift */,
 				E993EA112B1BC6BE002977DF /* HabitClass.swift */,
+				E979DA3F2B1E171600E6A70C /* HabitDetailView.swift */,
+				E979DA412B1E18EA00E6A70C /* ProgressBarView.swift */,
+				E979DA432B1E2C2E00E6A70C /* CustomDividerView.swift */,
 				E993EA072B1B96D2002977DF /* Assets.xcassets */,
 				E993EA092B1B96D2002977DF /* Preview Content */,
 			);
@@ -142,7 +151,10 @@
 			files = (
 				E993EA062B1B96D2002977DF /* ContentView.swift in Sources */,
 				E993EA122B1BC6BE002977DF /* HabitClass.swift in Sources */,
+				E979DA402B1E171600E6A70C /* HabitDetailView.swift in Sources */,
+				E979DA442B1E2C2E00E6A70C /* CustomDividerView.swift in Sources */,
 				E993EA042B1B96D2002977DF /* HabitoApp.swift in Sources */,
+				E979DA422B1E18EA00E6A70C /* ProgressBarView.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

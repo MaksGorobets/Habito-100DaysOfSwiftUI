@@ -17,21 +17,28 @@ struct ContentView: View {
     
     let habits = Habits()
     
+    @State private var path = NavigationPath()
+    
     var body: some View {
-        NavigationStack {
+        NavigationStack(path: $path) {
             ScrollView {
-                LazyVStack {
-                    ForEach(habits.items) { habit in
-                        HabitView(habit: habit, isEditing: $isEditing)
-                            .padding(1)
+                ForEach(habits.items) { habit in
+                    NavigationLink {
+                        HabitDetailView(habits: habits, habit: habit)
+                    } label: {
+                        LazyVStack {
+                            HabitView(habit: habit, habits: habits, isEditing: $isEditing)
+                                .padding(1)
+                        }
                     }
+                    .foregroundStyle(.white)
                 }
-                Button("Edit") {
+                Button("Edit", role: .destructive) {
                     withAnimation {
                         isEditing.toggle()
                     }
                 }
-                .buttonStyle(.bordered)
+                .buttonStyle(.borderedProminent)
                 .clipShape(RoundedRectangle(cornerRadius: 25.0))
                 .padding()
             }
@@ -48,16 +55,23 @@ struct ContentView: View {
                     .presentationDetents([.medium])
             }
             .navigationTitle("Habito")
-            .padding()
+            .padding(.horizontal)
+            .containerRelativeFrame(.horizontal, { width, axis in
+                width
+            })
+            .background(.blue.gradient)
+            .preferredColorScheme(.dark)
         }
+        .scrollIndicators(.hidden)
     }
 }
 
 struct HabitView: View {
-    
+
     let habit: Habit
     
     @State var deleteScale = 1.0
+    let habits: Habits
     
     @Binding var isEditing: Bool
     
@@ -65,25 +79,34 @@ struct HabitView: View {
         HStack {
             Text(habit.emoji)
                 .font(.system(size: 50))
+                .shadow(color: .white, radius: 2)
             VStack(alignment: .leading) {
-                Text(habit.name)
+                Text("\(habit.name) (\(habit.completedTimes) / \(habit.completionTarget))")
                 Text("Untill: \(habit.endString)")
             }
             Spacer()
             if isEditing {
-                Image(systemName: "trash.fill")
-                    .foregroundStyle(.red)
-                    .scaleEffect(CGSize(width: deleteScale, height: deleteScale))
-                    .onAppear {
-                        animateButton()
+                Button {
+                    withAnimation {
+                        habits.removeItem(habit: habit)
                     }
-                    .animation(.spring, value: deleteScale)
+                } label: {
+                    Image(systemName: "trash.fill")
+                        .foregroundStyle(.red)
+                        .scaleEffect(CGSize(width: deleteScale, height: deleteScale))
+                        .shadow(color: .white, radius: 1)
+                        .onAppear {
+                            animateButton()
+                        }
+                        .animation(.spring, value: deleteScale)
+                }
             } else {
                 
             }
         }
         .padding()
         .frame(maxHeight: 200)
+        .background(.ultraThinMaterial)
         .clipShape(RoundedRectangle(cornerRadius: 25.0))
         .overlay {
             RoundedRectangle(cornerRadius: 25.0)
@@ -100,28 +123,34 @@ struct HabitView: View {
             deleteScale = 1.0
         }
     }
-    
 }
 
 struct SheetView: View {
     
+    static var fourteenDays: Date {
+        let calendar = Calendar.current
+        return calendar.date(byAdding: .day, value: 14, to: .now)!
+    }
+    
     let habits: Habits
     
-    let calendar = Calendar.current
     @State private var emoji = "🏃🏻"
     @State private var name = ""
     @State private var compTarget = 1
-    @State private var endDate = Date()
+    @State var endDate = fourteenDays
     @State private var description = ""
     @Environment(\.dismiss) var dismiss
     
     let emojis = ["🏃🏻", "🩲", "📕", "🏋🏻", "🎨"]
     var body: some View {
         NavigationStack {
-            List {
-                Picker("Pick an emoji", selection: $emoji) {
-                    ForEach(emojis, id: \.self) { emoji in
-                        Text(emoji)
+            VStack {
+                HStack {
+                    Text("Pick an emoji:")
+                    Picker("Pick an emoji", selection: $emoji) {
+                        ForEach(emojis, id: \.self) { emoji in
+                            Text(emoji)
+                        }
                     }
                 }
                 TextField("Enter a name", text: $name)
@@ -129,26 +158,21 @@ struct SheetView: View {
                 Stepper("Completion target \(compTarget)", value: $compTarget, in: 1...999)
                 DatePicker("Pick an end date", selection: $endDate, displayedComponents: [.date])
             }
+            .padding()
             .toolbar {
                 Button("Done") {
                     dismiss()
                     saveCurrent()
                 }
             }
-            .onAppear {
-                endDate = fouruteenDays()
-            }
             .navigationTitle("Create a new habit")
             .navigationBarTitleDisplayMode(.inline)
         }
     }
     
-    func fouruteenDays() -> Date {
-        return calendar.date(byAdding: .day, value: 14, to: .now)!
-    }
-    
     func saveCurrent() {
         print("Saving...")
+        guard name != "" else { return }
         habits.items.append(Habit(emoji: emoji, name: name, completionTarget: compTarget, endDate: endDate, description: description))
     }
     
