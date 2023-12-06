@@ -23,9 +23,7 @@ struct ContentView: View {
         NavigationStack(path: $path) {
             ScrollView {
                 ForEach(habits.items) { habit in
-                    NavigationLink {
-                        HabitDetailView(habits: habits, habit: habit)
-                    } label: {
+                    NavigationLink(value: habit) {
                         LazyVStack {
                             HabitView(habit: habit, habits: habits, isEditing: $isEditing)
                                 .padding(1)
@@ -41,6 +39,9 @@ struct ContentView: View {
                 .buttonStyle(.borderedProminent)
                 .clipShape(RoundedRectangle(cornerRadius: 25.0))
                 .padding()
+            }
+            .navigationDestination(for: Habit.self) { habit in
+                HabitDetailView(habits: habits, habit: habit)
             }
             .toolbar {
                 Button {
@@ -86,20 +87,7 @@ struct HabitView: View {
             }
             Spacer()
             if isEditing {
-                Button {
-                    withAnimation {
-                        habits.removeItem(habit: habit)
-                    }
-                } label: {
-                    Image(systemName: "trash.fill")
-                        .foregroundStyle(.red)
-                        .scaleEffect(CGSize(width: deleteScale, height: deleteScale))
-                        .shadow(color: .white, radius: 1)
-                        .onAppear {
-                            animateButton()
-                        }
-                        .animation(.spring, value: deleteScale)
-                }
+                editButton()
             } else {
                 
             }
@@ -111,6 +99,23 @@ struct HabitView: View {
         .overlay {
             RoundedRectangle(cornerRadius: 25.0)
                 .stroke(lineWidth: 1)
+        }
+    }
+    
+    func editButton() -> some View {
+        Button {
+            withAnimation {
+                habits.removeItem(habit: habit)
+            }
+        } label: {
+            Image(systemName: "trash.fill")
+                .foregroundStyle(.red)
+                .scaleEffect(CGSize(width: deleteScale, height: deleteScale))
+                .shadow(color: .white, radius: 1)
+                .onAppear {
+                    animateButton()
+                }
+                .animation(.spring, value: deleteScale)
         }
     }
     

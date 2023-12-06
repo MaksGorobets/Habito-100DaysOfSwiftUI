@@ -15,20 +15,7 @@ struct HabitDetailView: View {
     var body: some View {
         ScrollView {
             VStack(spacing: 0) {
-                VStack {
-                    HStack {
-                        Text(habit.emoji)
-                            .font(.system(size: 120))
-                            .shadow(color: .white, radius: 5)
-                        Text(habit.name)
-                            .font(.system(size: 30, design: .serif))
-                            .padding()
-                    }
-                    HStack {
-                        Text("\(habit.startString) - \(habit.endString)")
-                    }
-                }
-                .padding()
+                mainTitle()
                 CustomDividerView()
                 ProgressBarView(progress: Double(habit.completedTimes), total: Double(habit.completionTarget))
                     .padding()
@@ -37,22 +24,8 @@ struct HabitDetailView: View {
                     VStack(alignment: .leading) {
                         HStack {
                             Text(String(habit.completedTimes))
-                            Button("+") { 
-                                habit.completedTimes += 1
-                                habits.saveItself()
-                            }
-                                .buttonStyle(.bordered)
-                                .tint(.white)
-                                .clipShape(Circle())
-                                .frame(width: 35, height: 35)
-                            Button("-") {
-                                habit.completedTimes -= 1
-                                habits.saveItself()
-                            }
-                                .buttonStyle(.bordered)
-                                .tint(.white)
-                                .clipShape(Circle())
-                                .frame(width: 35, height: 35)
+                            addCompletionButton()
+                            subtractCompletionButton()
                         }
                         Text("Completed")
                     }
@@ -78,6 +51,46 @@ struct HabitDetailView: View {
         .preferredColorScheme(.dark)
         .navigationTitle("Info")
     }
+    
+    func addCompletionButton() -> some View {
+        Button("+") {
+            habit.completedTimes += 1
+            habits.saveItself()
+        }
+            .buttonStyle(.bordered)
+            .tint(.white)
+            .clipShape(Circle())
+            .frame(width: 35, height: 35)
+    }
+    
+    func subtractCompletionButton() -> some View {
+        Button("-") {
+            habit.completedTimes -= 1
+            habits.saveItself()
+        }
+            .buttonStyle(.bordered)
+            .tint(.white)
+            .clipShape(Circle())
+            .frame(width: 35, height: 35)
+    }
+    
+    func mainTitle() -> some View {
+        VStack {
+            HStack {
+                Text(habit.emoji)
+                    .font(.system(size: 120))
+                    .shadow(color: .white, radius: 5)
+                Text(habit.name)
+                    .font(.system(size: 30, design: .serif))
+                    .padding()
+            }
+            HStack {
+                Text("\(habit.startString) - \(habit.endString)")
+            }
+        }
+        .padding()
+    }
+    
 }
 
 #Preview {

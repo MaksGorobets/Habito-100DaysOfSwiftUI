@@ -8,15 +8,23 @@
 import Foundation
 
 @Observable
-class Habit: Identifiable, Codable {
+class Habit: Identifiable, Codable, Equatable, Hashable {
     
-    var id = UUID()
-    var emoji: String
-    var name: String
-    var startDate = Date()
-    var completedTimes = 0 
-    var completionTarget: Int
-    var endDate: Date
+    static func == (lhs: Habit, rhs: Habit) -> Bool {
+        lhs.id == rhs.id
+    }
+    
+    func hash(into hasher: inout Hasher) {
+        hasher.combine(id)
+    }
+    
+    let id: UUID
+    let emoji: String
+    let name: String
+    let startDate: Date
+    var completedTimes = 0
+    let completionTarget: Int
+    let endDate: Date
     
     var startString: String {
         let dateFormatter = DateFormatter()
@@ -32,9 +40,11 @@ class Habit: Identifiable, Codable {
     
     var description: String
     
-    init(emoji: String, name: String, completionTarget: Int, endDate: Date, description: String) {
+    init(id: UUID = UUID(), emoji: String, name: String, startDate: Date = Date(), completionTarget: Int, endDate: Date, description: String) {
+        self.id = id
         self.emoji = emoji
         self.name = name
+        self.startDate = startDate
         self.completionTarget = completionTarget
         self.endDate = endDate
         self.description = description
