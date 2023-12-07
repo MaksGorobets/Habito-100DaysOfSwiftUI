@@ -24,6 +24,7 @@ struct HabitDetailView: View {
                     VStack(alignment: .leading) {
                         HStack {
                             Text(String(habit.completedTimes))
+                                .contentTransition(.numericText(value: Double(habit.completedTimes)))
                             addCompletionButton()
                             subtractCompletionButton()
                         }
@@ -54,24 +55,31 @@ struct HabitDetailView: View {
     
     func addCompletionButton() -> some View {
         Button("+") {
-            habit.completedTimes += 1
-            habits.saveItself()
+            withAnimation {
+                habit.completedTimes += 1
+                habits.saveItself()
+            }
         }
-            .buttonStyle(.bordered)
-            .tint(.white)
-            .clipShape(Circle())
-            .frame(width: 35, height: 35)
+        .sensoryFeedback(.increase, trigger: habit.completedTimes)
+        .buttonStyle(.bordered)
+        .tint(.white)
+        .clipShape(Circle())
+        .frame(width: 35, height: 35)
     }
     
     func subtractCompletionButton() -> some View {
         Button("-") {
-            habit.completedTimes -= 1
-            habits.saveItself()
+            withAnimation {
+                habit.completedTimes -= 1
+                habits.saveItself()
+            }
         }
-            .buttonStyle(.bordered)
-            .tint(.white)
-            .clipShape(Circle())
-            .frame(width: 35, height: 35)
+        .disabled(habit.completedTimes == 0)
+        .sensoryFeedback(.decrease, trigger: habit.completedTimes)
+        .buttonStyle(.bordered)
+        .tint(.white)
+        .clipShape(Circle())
+        .frame(width: 35, height: 35)
     }
     
     func mainTitle() -> some View {

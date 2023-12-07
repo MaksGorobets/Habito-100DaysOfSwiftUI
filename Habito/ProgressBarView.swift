@@ -45,7 +45,9 @@ struct BarProgressStyle: ProgressViewStyle {
                     }
                 VStack {
                     Image(systemName: "arrowtriangle.up.fill")
-                    Text(String(format: "%.0f%%", progress * 100))
+                    let percentage = String(format: "%.0f%%", progress * 100)
+                    Text(percentage)
+                        .contentTransition(.numericText(value: Double(percentage) ?? 10))
                 }
                 .offset(CGSize(width: geometry.size.width * progress - 15, height: 10.0))
             }
