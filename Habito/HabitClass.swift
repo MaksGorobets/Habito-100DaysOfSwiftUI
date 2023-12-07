@@ -49,6 +49,18 @@ class Habit: Identifiable, Codable, Equatable, Hashable {
         self.endDate = endDate
         self.description = description
     }
+    
+    enum CodingKeys: String, CodingKey {
+        case completionTarget = "completionTarget"
+        case startDate = "startDate"
+        case endDate = "endDate"
+        case _description = "description"
+        case id = "id"
+        case name = "name"
+        case _completedTimes = "completedTimes"
+        case emoji = "emoji"
+    }
+    
 }
 
 @Observable
@@ -69,6 +81,8 @@ class Habits {
         if let data = UserDefaults.standard.data(forKey: "Expenses") {
             if let decodedData = try? JSONDecoder().decode([Habit].self, from: data) {
                 items = decodedData
+                let str = String(decoding: data, as: UTF8.self)
+                print(str)
                 return
             }
         }
