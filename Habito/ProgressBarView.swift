@@ -11,13 +11,21 @@ struct ProgressBarView: View {
     
     var progress: Double
     var total: Double
+    var progressWithBounds: Double {
+        if progress > total {
+            return total
+        } else {
+            return progress
+        }
+    }
     
     var body: some View {
-        ProgressView(value: progress, total: total)
+        ProgressView(value: progressWithBounds, total: total)
             .tint(.purple)
             .padding()
             .progressViewStyle(BarProgressStyle())
             .frame(height: 50)
+            .accessibilityLabel("Progress bar, \(Int(progressWithBounds)) out of \(Int(total))")
     }
 }
 

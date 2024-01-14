@@ -24,6 +24,9 @@ class Habit: Identifiable, Codable, Equatable, Hashable {
     let startDate: Date
     var completedTimes = 0
     let completionTarget: Int
+    var completionsLeft: Int {
+        (completionTarget - completedTimes) <= 0 ? 0 : (completionTarget - completedTimes)
+    }
     let endDate: Date
     
     var startString: String {

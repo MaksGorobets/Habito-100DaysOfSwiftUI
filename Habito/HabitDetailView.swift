@@ -12,6 +12,9 @@ struct HabitDetailView: View {
     @State var habits: Habits
     @State var habit: Habit
     
+    @State private var isShowingAlert = false
+    @State private var alertMessage = ""
+    
     var body: some View {
         ScrollView {
             VStack(spacing: 0) {
@@ -25,8 +28,22 @@ struct HabitDetailView: View {
                         HStack {
                             Text(String(habit.completedTimes))
                                 .contentTransition(.numericText(value: Double(habit.completedTimes)))
-                            addCompletionButton()
-                            subtractCompletionButton()
+                            addCompletionButton
+                            subtractCompletionButton
+                        }
+                        .alert(alertMessage, isPresented: $isShowingAlert) { }
+                        .accessibilityElement()
+                        .accessibilityLabel("Completion value")
+                        .accessibilityValue(String(habit.completedTimes))
+                        .accessibilityAdjustableAction { direction in
+                            switch direction {
+                            case .increment:
+                                incrementHabit()
+                            case .decrement:
+                                decrementHabit()
+                            @unknown default:
+                                alertUser("Unknown gesture")
+                            }
                         }
                         Text("Completed")
                     }
@@ -35,9 +52,11 @@ struct HabitDetailView: View {
                     VStack(alignment: .trailing) {
                         Text(String(habit.completionTarget))
                             .frame(width: 35, height: 35)
-                        Text("Left")
+                        Text("Goal")
                     }
                     .font(.system(size: 25))
+                    .accessibilityElement()
+                    .accessibilityLabel("Goal is \(habit.completionTarget), \(habit.completionsLeft) completions left.")
                 }
                 .padding()
                 CustomDividerView()
@@ -45,6 +64,8 @@ struct HabitDetailView: View {
                     Text("About")
                     Text(habit.description)
                 }
+                .accessibilityElement()
+                .accessibilityLabel("About this habit: \(habit.description)")
                 Spacer()
             }
         }
@@ -53,11 +74,10 @@ struct HabitDetailView: View {
         .navigationTitle("Info")
     }
     
-    func addCompletionButton() -> some View {
+    private var addCompletionButton: some View {
         Button("+") {
             withAnimation {
-                habit.completedTimes += 1
-                habits.saveItself()
+                incrementHabit()
             }
         }
         .sensoryFeedback(.increase, trigger: habit.completedTimes)
@@ -67,11 +87,10 @@ struct HabitDetailView: View {
         .frame(width: 35, height: 35)
     }
     
-    func subtractCompletionButton() -> some View {
+    private var subtractCompletionButton: some View {
         Button("-") {
             withAnimation {
-                habit.completedTimes -= 1
-                habits.saveItself()
+                decrementHabit()
             }
         }
         .disabled(habit.completedTimes == 0)
@@ -80,6 +99,23 @@ struct HabitDetailView: View {
         .tint(.white)
         .clipShape(Circle())
         .frame(width: 35, height: 35)
+    }
+    
+    func alertUser(_ message: String) {
+        alertMessage = message
+        isShowingAlert = true
+    }
+    
+    func incrementHabit() {
+        habit.completedTimes += 1
+        habits.saveItself()
+    }
+    
+    func decrementHabit() {
+        if habit.completedTimes != 0 {
+            habit.completedTimes -= 1
+            habits.saveItself()
+        }
     }
     
     func mainTitle() -> some View {
