@@ -6,10 +6,15 @@
 //
 
 import SwiftUI
+import UserNotifications
 
 struct ContentView: View {
     
     let calendar = Calendar.current
+    
+    let notifications = UNUserNotificationCenter.current()
+    
+    @AppStorage("NOTIFY") var isNotify = false
     
     @State private var isPresented = false
     
@@ -64,7 +69,38 @@ struct ContentView: View {
             .preferredColorScheme(.dark)
         }
         .scrollIndicators(.hidden)
+        .onAppear {
+            if !isNotify {
+                requestUserNotifications()
+            }
+        }
     }
+    
+    func requestUserNotifications() {
+        notifications.requestAuthorization(options: [.badge, .alert]) { success, error in
+            if success {
+                isNotify = true
+                notify()
+            } else if let error {
+                print(error.localizedDescription)
+            }
+        }
+    }
+    
+    func notify() {
+        if isNotify {
+            let content = UNMutableNotificationContent()
+            content.title = "Keep it up!"
+            content.body = "Did you make a step towards your goals today?"
+            
+            let trigger = UNTimeIntervalNotificationTrigger(timeInterval: 86400, repeats: true)
+            
+            let request = UNNotificationRequest(identifier: UUID().uuidString, content: content, trigger: trigger)
+            
+            notifications.add(request)
+        }
+    }
+    
 }
 
 struct HabitView: View {
